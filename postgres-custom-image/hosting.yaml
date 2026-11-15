@@ -1,0 +1,6 @@
+# Schema 1.25 adds databases.<key>.image. Until Hosting ships it, preview refuses this document.
+version: "1.25"
+databases:
+  primary:
+    engine: postgres
+    image: {registryHost: ghcr.io, repository: acme/postgres-hypopg, reference: "18-1"}

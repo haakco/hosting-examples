@@ -1,0 +1,16 @@
+name: examples
+on:
+  push: {branches: [main]}
+  pull_request:
+permissions: {contents: read}
+jobs:
+  postgres-custom-image:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build
+        run: docker build -t example-pg postgres-custom-image
+      - name: Starts as user 26 and the extension loads
+        run: >-
+          docker run --rm --entrypoint bash example-pg -c
+          'initdb -D /tmp/d -U postgres >/dev/null && pg_ctl -D /tmp/d -o "-k /tmp" -w start >/dev/null && psql -h /tmp -U postgres -v ON_ERROR_STOP=1 -c "CREATE EXTENSION hypopg;" && test "$(id -u)" = 26'
