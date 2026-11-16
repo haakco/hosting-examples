@@ -1,5 +1,5 @@
-# Schema 1.25 adds databases.<key>.image. Until Hosting ships it, preview refuses this document.
-version: "1.25"
+# Schema 1.26 adds databases.<key>.image. Until Hosting ships it, preview refuses this document.
+version: "1.26"
 databases:
   primary:
     engine: postgres

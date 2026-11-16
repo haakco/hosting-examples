@@ -3,7 +3,7 @@
 Run a Hosting database server from a PostgreSQL image you build, with an extension the standard offering
 does not include. Hosting still manages credentials, backups and upgrades within the major version.
 
-> **Status:** needs schema `1.25` (`databases.<key>.image`), which is not released yet. The image builds
+> **Status:** needs schema `1.26` (`databases.<key>.image`), which is not released yet. The image builds
 > and runs today; the `hosting.yaml` is refused until the schema ships.
 
 ## Requirements
