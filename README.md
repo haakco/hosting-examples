@@ -5,4 +5,4 @@ README, a `hosting.yaml` and any `Dockerfile`, plus the full `hostingctl` comman
 
 | Example | Shows |
 | --- | --- |
-| [`postgres-custom-image`](postgres-custom-image/) | A PostgreSQL server image with one extra extension |
+| [`postgres-custom-image`](postgres-custom-image/) | Your own PostgreSQL image, run as one of your applications, with one extra extension |

@@ -1,6 +1,19 @@
-# Schema 1.26 adds databases.<key>.image. Until Hosting ships it, preview refuses this document.
-version: "1.26"
-databases:
-  primary:
-    engine: postgres
+# Schema 1.25 lets a client image keep data on its own disk at any path and stay private on a
+# non-HTTP port. Until Hosting ships it, preview refuses this document.
+version: "1.25"
+applications:
+  db:
+    runtime: client_image
     image: {registryHost: ghcr.io, repository: acme/postgres-hypopg, reference: "18-1"}
+    run: {port: 5432, protocol: postgres}      # private: no public route
+    env:
+      POSTGRES_PASSWORD:
+        secret: db_password
+    storage:
+      - {volume: db-data, mountPath: /var/lib/postgresql}
+storage:
+  db-data: {sizeMib: 10240}
+secrets:
+  db_password:
+    description: Password for the postgres user
+    required: true

@@ -1,19 +1,15 @@
 # Your own PostgreSQL image
 
-Run a Hosting database server from a PostgreSQL image you build, with an extension the standard offering
-does not include. Hosting still manages credentials, backups and upgrades within the major version.
+Run PostgreSQL from an image you build, as one of your own applications on Hosting, with an extension the
+managed PostgreSQL server does not offer. You run it: Hosting starts it, keeps its disk and keeps it
+private, but does not manage its credentials, backups, upgrades or exports.
 
-> **Status:** needs schema `1.26` (`databases.<key>.image`), which is not released yet. The image builds
-> and runs today; the `hosting.yaml` is refused until the schema ships.
+> **Status:** needs schema `1.25` (a client image's own disk at any path, and a private non-HTTP port), which
+> is not released yet. The image builds and runs today; the `hosting.yaml` is refused until the schema ships.
 
-## Requirements
-
-- `linux/amd64`, the same PostgreSQL major as your server (today 18).
-- PostgreSQL server binaries on `PATH`, `du`, user ID 26 and a writable `/var/lib/postgresql/data`.
-- No backup tools: Hosting runs backups beside the database, not in your image.
-- Your image's entrypoint and command are ignored. Hosting starts PostgreSQL itself.
-
-Starting `FROM` the CloudNativePG image, as this example does, meets all of these.
+**Want Hosting to run the database for you instead?** Use a managed PostgreSQL database
+(`databases.<key>.engine: postgres`). Hosting then owns backups, credentials and failover, and you choose
+from its extension catalogue.
 
 ## Build and push
 
@@ -25,8 +21,10 @@ docker push ghcr.io/acme/postgres-hypopg:18-1
 ## Try it locally
 
 ```bash
-docker run --rm --entrypoint bash ghcr.io/acme/postgres-hypopg:18-1 -c \
-  'initdb -D /tmp/d -U postgres >/dev/null && pg_ctl -D /tmp/d -o "-k /tmp" -w start >/dev/null && psql -h /tmp -U postgres -v ON_ERROR_STOP=1 -c "CREATE EXTENSION hypopg;" && test "$(id -u)" = 26'
+docker run -d --name pg -e POSTGRES_PASSWORD=local ghcr.io/acme/postgres-hypopg:18-1
+until docker exec pg pg_isready -U postgres; do sleep 1; done
+docker exec pg psql -U postgres -v ON_ERROR_STOP=1 -c "CREATE EXTENSION hypopg;"
+docker rm -f pg
 ```
 
 ## Use it on Hosting
@@ -38,13 +36,20 @@ hostingctl environment configuration preview --file hosting.yaml acme-prod
 hostingctl environment configuration apply --file hosting.yaml --wait --confirm acme-prod
 ```
 
-Changing the image restarts the database server; the preview says so.
+Set the `db_password` secret when the preview asks for it. Your other applications reach the database
+with a reference, which also grants the network access:
 
-## Switch back
+```yaml
+env:
+  DATABASE_URL: {service: db, field: url}
+```
 
-Remove the `image:` line and apply again. The server returns to the platform image.
+## Backups are yours
+
+Hosting keeps the disk, but does not back it up, and copying a running database's files is not a backup.
+Run `pg_dump` on a schedule into your own storage, and test a restore.
 
 ## Your responsibility
 
-The image is yours, like your application code: what it contains, its licences and its updates. Hosting
-checks that it is compatible and reports why if it fails to start.
+The image is yours, like your application code: what it contains, its licences, its security updates and
+its upgrades between PostgreSQL major versions.
