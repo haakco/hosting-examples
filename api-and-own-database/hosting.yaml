@@ -1,0 +1,28 @@
+# Schema 1.25 lets a client image be referenced by another, keep data on its own disks at any path, run
+# scheduled tasks, and stay private on a non-HTTP port. Until Hosting ships it, preview refuses this document.
+version: "1.25"
+applications:
+  api:
+    runtime: client_image
+    image: {registryHost: ghcr.io, repository: haakco/hosting-examples/api, reference: "1"}
+    run: {port: 8080, healthPath: /up}          # routed: the environment's address reaches it
+    env:
+      DATABASE_URL: {service: db, field: url}   # the reference is also the network grant to db
+      PGUSER: postgres
+      PGPASSWORD: {secret: db_password}
+    cron:
+      nightly_report: {schedule: "0 2 * * *", command: [bin/report]}
+  db:                                           # a client-run database: you own its backups
+    runtime: client_image
+    image: {registryHost: ghcr.io, repository: haakco/hosting-examples/postgres-hypopg, reference: "18-1"}
+    run: {port: 5432, protocol: postgres}       # any non-HTTP protocol is private: no public route
+    env:
+      POSTGRES_PASSWORD: {secret: db_password}
+    storage:
+      - {volume: db_data, mountPath: /var/lib/postgresql}   # PostgreSQL 18 layout
+      - {volume: db_dumps, mountPath: /dumps}               # where your pg_dump backups go
+storage:
+  db_data: {sizeMib: 10240}
+  db_dumps: {sizeMib: 20480}
+secrets:
+  db_password: {description: Password for the postgres user, required: true}

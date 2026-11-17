@@ -4,15 +4,15 @@ version: "1.25"
 applications:
   db:
     runtime: client_image
-    image: {registryHost: ghcr.io, repository: acme/postgres-hypopg, reference: "18-1"}
+    image: {registryHost: ghcr.io, repository: haakco/hosting-examples/postgres-hypopg, reference: "18-1"}
     run: {port: 5432, protocol: postgres}      # private: no public route
     env:
       POSTGRES_PASSWORD:
         secret: db_password
     storage:
-      - {volume: db-data, mountPath: /var/lib/postgresql}
+      - {volume: db_data, mountPath: /var/lib/postgresql}
 storage:
-  db-data: {sizeMib: 10240}
+  db_data: {sizeMib: 10240}
 secrets:
   db_password:
     description: Password for the postgres user

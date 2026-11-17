@@ -4,6 +4,14 @@ on:
   pull_request:
 permissions: {contents: read}
 jobs:
+  hosting-yaml:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+      - name: Every hosting.yaml matches its published schema
+        run: scripts/validate-hosting-yaml.sh
+
   postgres-custom-image:
     runs-on: ubuntu-24.04
     steps:
@@ -15,3 +23,32 @@ jobs:
           docker run -d --name pg -e POSTGRES_PASSWORD=ci example-pg
           for _ in $(seq 60); do docker exec pg pg_isready -U postgres && break; sleep 1; done
           docker exec pg psql -U postgres -v ON_ERROR_STOP=1 -c "CREATE EXTENSION hypopg;"
+
+  api-and-own-database:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build both images
+        run: |
+          docker build -t example-pg postgres-custom-image
+          docker build -t example-api api-and-own-database/api
+      - name: The api reaches its database and the report runs
+        run: |
+          docker network create example
+          docker run -d --name db --network example -e POSTGRES_PASSWORD=ci example-pg
+          docker run -d --name api --network example -p 8080:8080 \
+            -e DATABASE_URL=postgres://db:5432 -e PGUSER=postgres -e PGPASSWORD=ci example-api
+          for _ in $(seq 60); do curl -fsS localhost:8080/up && break; sleep 1; done
+          curl -fsS localhost:8080/up
+          docker exec api bin/report
+
+  single-image-web:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build and answer /up
+        run: |
+          docker build -t example-web single-image-web
+          docker run -d --name web -p 8080:8080 example-web
+          for _ in $(seq 30); do curl -fsS localhost:8080/up && break; sleep 1; done
+          curl -fsS localhost:8080/up

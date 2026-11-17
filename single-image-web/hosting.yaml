@@ -1,0 +1,6 @@
+version: "1.24"
+applications:
+  web:
+    runtime: client_image
+    image: {registryHost: ghcr.io, repository: haakco/hosting-examples/single-image-web, reference: "1"}
+    run: {port: 8080, healthPath: /up}
