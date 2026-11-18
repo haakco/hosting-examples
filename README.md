@@ -11,7 +11,11 @@ README, a `hosting.yaml` and any `Dockerfile`, plus the full `hostingctl` comman
 
 ## The `hostingctl` sequence
 
-Every example follows the same steps; its README has the exact commands.
+Every example follows the same steps; its README has the exact commands. Your Hosting company needs
+some of its package storage assigned to object storage before you import an image. Hosting uses that
+allocation for imported images and rollback copies. If your company already has object storage, reuse
+its allocation. Otherwise, use `hostingctl storage add --help` and select `--mode package` to assign
+capacity from your existing package.
 
 1. Install and sign in: `npm i -g @haakco/hostingctl`, then `hostingctl login --company <your-company>`.
 2. Pick an environment (`hostingctl environments`) or create one (`hostingctl environment create --name …`).

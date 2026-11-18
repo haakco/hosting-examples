@@ -30,6 +30,8 @@ docker rm -f pg
 
 ## Use it on Hosting
 
+Before importing, check the [object storage prerequisite](../README.md#the-hostingctl-sequence).
+
 `<env>` is the environment's uuid and `<db>` the application's uuid, as
 `hostingctl environments` and `hostingctl application list <env>` print them. Every write takes `--dry-run`
 to describe the change and send nothing, then `--confirm` to make it.
@@ -66,7 +68,7 @@ hostingctl environment configuration apply <env> --file hosting.yaml --wait --co
 hostingctl application list <env>
 hostingctl application prepare-image <env> <db> --dry-run
 hostingctl application prepare-image <env> <db> --confirm
-hostingctl application deployment <env> <db>               # shows the prepared release
+hostingctl application deployment <env> <db>               # wait for the prepared release to show ready
 hostingctl application deploy <env> <db> <release> --confirm
 
 # 6. Status and logs
