@@ -4,9 +4,6 @@ Run PostgreSQL from an image you build, as one of your own applications on Hosti
 managed PostgreSQL server does not offer. You run it: Hosting starts it, keeps its disk and keeps it
 private, but does not manage its credentials, backups, upgrades or exports.
 
-> **Status:** not deployable until schema `1.25` is released (a client image's own disk at any path, and a
-> private non-HTTP port). The image builds and runs today; the `hosting.yaml` is refused until the schema ships.
-
 **Want Hosting to run the database for you instead?** Use a managed PostgreSQL database
 (`databases.<key>.engine: postgres`). Hosting then owns backups, credentials and failover, and you choose
 from its extension catalogue.
@@ -33,7 +30,7 @@ docker rm -f pg
 
 ## Use it on Hosting
 
-Available once schema `1.25` ships. `<env>` is the environment's uuid and `<db>` the application's uuid, as
+`<env>` is the environment's uuid and `<db>` the application's uuid, as
 `hostingctl environments` and `hostingctl application list <env>` print them. Every write takes `--dry-run`
 to describe the change and send nothing, then `--confirm` to make it.
 
@@ -74,7 +71,7 @@ hostingctl environment show <env>
 hostingctl application show <env> <db>
 hostingctl logs live <env> --application <db>
 
-# 7. What a document may reference: `db` is listed as a service producer once schema 1.25 ships
+# 7. List the services the document can reference, including `db`
 hostingctl environment references <env>
 ```
 

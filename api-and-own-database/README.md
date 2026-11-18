@@ -4,10 +4,6 @@ Two of your own container images as one system: an HTTP `api` and the PostgreSQL
 names the database by reference, and Hosting works out the rest: the reference is the address and the
 network grant, a non-HTTP port stays private, and each disk is its own claim at the path you give.
 
-> **Status:** not deployable until schema `1.25` is released (a client image as a reference target, scheduled
-> tasks on a client image, more than one disk at any path, and a private non-HTTP port). The images build and
-> run today; the `hosting.yaml` is refused until the schema ships.
-
 **Want Hosting to run the database for you instead?** Use a managed PostgreSQL database
 (`databases.<key>.engine: postgres`). Hosting then owns backups, credentials and failover.
 
@@ -57,7 +53,7 @@ docker rm -f api db && docker network rm example
 
 ## Use it on Hosting
 
-Available once schema `1.25` ships. `<env>` is the environment's uuid and `<api>`/`<db>` the applications'
+`<env>` is the environment's uuid and `<api>`/`<db>` the applications'
 uuids, as `hostingctl environments` and `hostingctl application list <env>` print them. Every write takes
 `--dry-run` to describe the change and send nothing, then `--confirm` to make it.
 
@@ -101,7 +97,7 @@ hostingctl application show <env> <api>
 hostingctl logs live <env> --application <api>
 hostingctl logs environment <env> --application <db>
 
-# 7. What a document may reference: `db` is listed as a service producer once schema 1.25 ships
+# 7. List the services the document can reference, including `db`
 hostingctl environment references <env>
 ```
 

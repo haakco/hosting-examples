@@ -6,8 +6,8 @@ README, a `hosting.yaml` and any `Dockerfile`, plus the full `hostingctl` comman
 | Example | Shows | Deployable |
 | --- | --- | --- |
 | [`single-image-web`](single-image-web/) | The smallest web application: one image, one port, a readiness path | Yes, schema `1.24` |
-| [`postgres-custom-image`](postgres-custom-image/) | Your own PostgreSQL image, run as one of your applications, with one extra extension | Not until schema `1.25` is released |
-| [`api-and-own-database`](api-and-own-database/) | An API and its own PostgreSQL: a reference, a private port, two disks and a nightly task | Not until schema `1.25` is released |
+| [`postgres-custom-image`](postgres-custom-image/) | Your own PostgreSQL image, run as one of your applications, with one extra extension | Yes, schema `1.25` |
+| [`api-and-own-database`](api-and-own-database/) | An API and its own PostgreSQL: a reference, a private port, two disks and a nightly task | Yes, schema `1.25` |
 
 ## The `hostingctl` sequence
 
@@ -37,6 +37,5 @@ owns backups.
 ## Checks
 
 CI builds every `Dockerfile`, starts each example's images, and validates every `hosting.yaml` against the
-schema Hosting publishes for its `version` (`https://hosting.haak.co/api/v1/hosting/schemas/<version>`). A
-document on a version Hosting has not published yet is skipped with a warning naming it. Run the schema check
-locally with `scripts/validate-hosting-yaml.sh`.
+schema Hosting publishes for its `version` (`https://hosting.haak.co/api/v1/hosting/schemas/<version>`). Run the
+schema check locally with `scripts/validate-hosting-yaml.sh`.

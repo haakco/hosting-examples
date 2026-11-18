@@ -1,5 +1,5 @@
 # Schema 1.25 lets a client image keep data on its own disk at any path and stay private on a
-# non-HTTP port. Until Hosting ships it, preview refuses this document.
+# non-HTTP port.
 version: "1.25"
 applications:
   db:

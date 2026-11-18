@@ -1,5 +1,5 @@
 # Schema 1.25 lets a client image be referenced by another, keep data on its own disks at any path, run
-# scheduled tasks, and stay private on a non-HTTP port. Until Hosting ships it, preview refuses this document.
+# scheduled tasks, and stay private on a non-HTTP port.
 version: "1.25"
 applications:
   api:
