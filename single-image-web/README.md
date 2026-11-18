@@ -63,7 +63,8 @@ hostingctl environment configuration apply <env> --file hosting.yaml --wait --co
 
 # 5. Import the image, then deploy the release it prepared
 hostingctl application list <env>
-hostingctl application prepare-image <env> <app>
+hostingctl application prepare-image <env> <app> --dry-run
+hostingctl application prepare-image <env> <app> --confirm
 hostingctl application deployment <env> <app>            # shows the prepared release
 hostingctl application deploy <env> <app> <release> --dry-run
 hostingctl application deploy <env> <app> <release> --confirm

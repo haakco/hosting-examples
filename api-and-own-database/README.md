@@ -84,10 +84,12 @@ hostingctl environment configuration apply <env> --file hosting.yaml --wait --co
 
 # 5. Import each image, then deploy the release it prepared: db first, then api
 hostingctl application list <env>
-hostingctl application prepare-image <env> <db>
+hostingctl application prepare-image <env> <db> --dry-run
+hostingctl application prepare-image <env> <db> --confirm
 hostingctl application deployment <env> <db>               # shows the prepared release
 hostingctl application deploy <env> <db> <release> --confirm
-hostingctl application prepare-image <env> <api>
+hostingctl application prepare-image <env> <api> --dry-run
+hostingctl application prepare-image <env> <api> --confirm
 hostingctl application deployment <env> <api>
 hostingctl application deploy <env> <api> <release> --confirm
 

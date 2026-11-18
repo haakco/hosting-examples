@@ -18,7 +18,7 @@ Every example follows the same steps; its README has the exact commands.
 3. For a private image, add a registry connection (`hostingctl registry-connections add …`) and `check` it.
 4. Review and apply: `hostingctl environment configuration preview <env> --file hosting.yaml`, then
    `apply` with `--dry-run` before `--confirm`.
-5. Import and deploy each image: `hostingctl application prepare-image`, then `application deploy`.
+5. Import and deploy each image: `hostingctl application prepare-image --confirm`, then `application deploy --confirm`.
 6. Status and logs: `hostingctl environment show <env>`, `hostingctl logs live <env> --application <app>`.
 7. What the environment may reference: `hostingctl environment references <env>`.
 8. Make one change, preview and apply it again.
