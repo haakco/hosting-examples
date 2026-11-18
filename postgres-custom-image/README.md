@@ -41,8 +41,8 @@ hostingctl login --company <your-company>
 
 # 2. Pick an environment, or create one for this example
 hostingctl environments
-hostingctl environment create --name "Own PostgreSQL" --dry-run
-hostingctl environment create --name "Own PostgreSQL" --confirm
+hostingctl environment create --name "Own PostgreSQL" --package empty_environment --dry-run
+hostingctl environment create --name "Own PostgreSQL" --package empty_environment --confirm
 
 # 3. Private image only: store a registry connection, check it, and add `connection: <uuid>` under `image:`
 #    (a public image needs no connection). The token is read from stdin and never printed.
@@ -55,6 +55,8 @@ hostingctl registry-connections check <connection-uuid> \
 
 # 4. Review, set the password, then apply
 hostingctl environment configuration preview <env> --file hosting.yaml
+# Save the draft so Hosting knows which secret to accept.
+hostingctl environment configuration save <env> --file hosting.yaml --confirm
 openssl rand -base64 32 > db-password && chmod 600 db-password
 hostingctl environment secret write <env> --key db_password --value-source file --value-file db-password --confirm
 hostingctl environment configuration apply <env> --file hosting.yaml --dry-run
